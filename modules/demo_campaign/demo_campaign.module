@@ -1,0 +1,246 @@
+<?php
+/**
+ * @file
+ * Organizing campaign pages, authorization cards and a School of Workers
+ * approval workflow.
+ *
+ * Cards are saved locally first, then pushed to the CRM. If the CRM is down,
+ * the card waits in a queue and cron retries it, so no signature is lost.
+ */
+
+/**
+ * Implements hook_config_info().
+ */
+function demo_campaign_config_info() {
+  $prefixes['demo_campaign.settings'] = array(
+    'label' => t('Demo Campaign settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function demo_campaign_autoload_info() {
+  return array(
+    'DemoCampaignOutboxMail' => 'demo_campaign.mail.inc',
+  );
+}
+
+/**
+ * Implements hook_permission().
+ */
+function demo_campaign_permission() {
+  return array(
+    'administer demo campaign' => array(
+      'title' => t('Administer demo campaigns'),
+      'description' => t('View cards, sign-ups, the outbox and the CRM log, and change settings.'),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function demo_campaign_menu() {
+  $items['demo'] = array(
+    'title' => 'Riverbend Lodge 412',
+    'page callback' => 'demo_campaign_demo_page',
+    'access callback' => TRUE,
+    'file' => 'demo_campaign.pages.inc',
+  );
+
+  // Public campaign page with the authorization card form.
+  $items['organize/%demo_campaign_campaign'] = array(
+    'title callback' => 'demo_campaign_campaign_title',
+    'title arguments' => array(1),
+    'page callback' => 'demo_campaign_campaign_page',
+    'page arguments' => array(1),
+    'access callback' => TRUE,
+    'file' => 'demo_campaign.pages.inc',
+  );
+  $items['organize/%demo_campaign_campaign/thanks'] = array(
+    'title' => 'Thank you',
+    'page callback' => 'demo_campaign_thanks_page',
+    'page arguments' => array(1),
+    'access callback' => TRUE,
+    'file' => 'demo_campaign.pages.inc',
+  );
+
+  // School of Workers sign-up and the business manager's review page.
+  $items['school/apply'] = array(
+    'title' => 'School of Workers',
+    'page callback' => 'demo_campaign_school_page',
+    'access callback' => TRUE,
+    'file' => 'demo_campaign.school.inc',
+  );
+  $items['school/review/%/%'] = array(
+    'title' => 'Review a School of Workers request',
+    'page callback' => 'demo_campaign_school_review_page',
+    'page arguments' => array(2, 3),
+    'access callback' => TRUE,
+    'file' => 'demo_campaign.school.inc',
+  );
+
+  // Stands in for Salesforce's REST endpoint for creating a Lead.
+  $items['crm-stub/services/data/v62.0/sobjects/Lead'] = array(
+    'page callback' => 'demo_campaign_crm_stub',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'demo_campaign.crm.inc',
+  );
+
+  // Staff dashboard.
+  $items['admin/demo-campaign'] = array(
+    'title' => 'Demo campaign',
+    'description' => 'Authorization cards, School of Workers sign-ups, the outbox and the CRM log.',
+    'page callback' => 'demo_campaign_admin_cards',
+    'access arguments' => array('administer demo campaign'),
+    'file' => 'demo_campaign.admin.inc',
+  );
+  $items['admin/demo-campaign/cards'] = array(
+    'title' => 'Cards',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0,
+  );
+  $items['admin/demo-campaign/school'] = array(
+    'title' => 'School sign-ups',
+    'page callback' => 'demo_campaign_admin_school',
+    'access arguments' => array('administer demo campaign'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+    'file' => 'demo_campaign.admin.inc',
+  );
+  $items['admin/demo-campaign/outbox'] = array(
+    'title' => 'Outbox',
+    'page callback' => 'demo_campaign_admin_outbox',
+    'access arguments' => array('administer demo campaign'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+    'file' => 'demo_campaign.admin.inc',
+  );
+  $items['admin/demo-campaign/crm-log'] = array(
+    'title' => 'CRM log',
+    'page callback' => 'demo_campaign_admin_crm_log',
+    'access arguments' => array('administer demo campaign'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 3,
+    'file' => 'demo_campaign.admin.inc',
+  );
+  $items['admin/demo-campaign/settings'] = array(
+    'title' => 'Settings',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('demo_campaign_settings_form'),
+    'access arguments' => array('administer demo campaign'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 4,
+    'file' => 'demo_campaign.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Menu loader: returns a campaign's settings, or FALSE for a 404.
+ */
+function demo_campaign_campaign_load($slug) {
+  $campaigns = config_get('demo_campaign.settings', 'campaigns');
+  if (isset($campaigns[$slug])) {
+    return array('slug' => $slug) + $campaigns[$slug];
+  }
+  return FALSE;
+}
+
+/**
+ * Title callback for a campaign page.
+ */
+function demo_campaign_campaign_title($campaign) {
+  return $campaign['title'];
+}
+
+/**
+ * Implements hook_cron_queue_info().
+ */
+function demo_campaign_cron_queue_info() {
+  $queues['demo_campaign_crm'] = array(
+    'worker callback' => 'demo_campaign_crm_queue_worker',
+    'time' => 30,
+  );
+  return $queues;
+}
+
+/**
+ * Queue worker: retries one card's CRM push.
+ *
+ * Throwing leaves the item in the queue, so the next cron run tries again.
+ */
+function demo_campaign_crm_queue_worker($cid) {
+  module_load_include('inc', 'demo_campaign', 'demo_campaign.crm');
+  if (!demo_campaign_crm_push($cid)) {
+    $card = demo_campaign_card_load($cid);
+    if ($card && $card->crm_status == 'retrying') {
+      throw new Exception(t('CRM push for card @cid failed; will retry.', array('@cid' => $cid)));
+    }
+  }
+}
+
+/**
+ * Loads one authorization card.
+ */
+function demo_campaign_card_load($cid) {
+  return db_query('SELECT * FROM {demo_campaign_card} WHERE cid = :cid', array(':cid' => $cid))->fetchObject();
+}
+
+/**
+ * Implements hook_mail().
+ */
+function demo_campaign_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'card_alert':
+      $card = $params['card'];
+      $message['subject'] = t('New authorization card: @name at @employer', array(
+        '@name' => $card->first_name . ' ' . $card->last_name,
+        '@employer' => $card->employer,
+      ));
+      $message['body'][] = t('A worker signed a card on the @campaign campaign page.', array('@campaign' => $params['campaign_title']));
+      $message['body'][] = t("Name: @name\nEmployer: @employer\nJob title: @title\nPhone: @phone\nEmail: @email\nBest way to reach them: @pref", array(
+        '@name' => $card->first_name . ' ' . $card->last_name,
+        '@employer' => $card->employer,
+        '@title' => $card->job_title ? $card->job_title : '-',
+        '@phone' => $card->phone,
+        '@email' => $card->email ? $card->email : '-',
+        '@pref' => $card->contact_pref,
+      ));
+      $message['body'][] = t('Source: @source / @medium / @utm', array(
+        '@source' => $card->utm_source ? $card->utm_source : 'direct',
+        '@medium' => $card->utm_medium ? $card->utm_medium : '-',
+        '@utm' => $card->utm_campaign ? $card->utm_campaign : '-',
+      ));
+      $message['body'][] = t('Please reach out within one business day.');
+      break;
+
+    case 'school_review':
+      $request = $params['request'];
+      $message['subject'] = t('School of Workers request from @name', array('@name' => $request['name']));
+      $message['body'][] = t('@name (@email) asked to attend @course.', array(
+        '@name' => $request['name'],
+        '@email' => $request['email'],
+        '@course' => $params['course_label'],
+      ));
+      $message['body'][] = t('Review and approve or decline here (this link works once and expires in @days days):', array('@days' => $params['days']));
+      $message['body'][] = $params['review_url'];
+      break;
+
+    case 'school_decision':
+      $request = $params['request'];
+      $approved = $request->status == 'approved';
+      $message['subject'] = $approved ? t('You are approved for @course', array('@course' => $params['course_label'])) : t('Update on your School of Workers request');
+      $message['body'][] = t('Hi @name,', array('@name' => $request->name));
+      $message['body'][] = $approved
+        ? t('Your business manager approved your request to attend @course. We will send dates and details soon.', array('@course' => $params['course_label']))
+        : t('Your business manager was not able to approve your request for @course this time. Please talk with your lodge about the next session.', array('@course' => $params['course_label']));
+      break;
+  }
+}

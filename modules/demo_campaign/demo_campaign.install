@@ -1,0 +1,105 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the Demo Campaign module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function demo_campaign_schema() {
+  $schema['demo_campaign_card'] = array(
+    'description' => 'Authorization cards submitted on campaign pages.',
+    'fields' => array(
+      'cid' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'campaign' => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'first_name' => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'last_name' => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'employer' => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'job_title' => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'phone' => array('type' => 'varchar', 'length' => 20, 'not null' => TRUE, 'default' => ''),
+      'email' => array('type' => 'varchar', 'length' => 254, 'not null' => TRUE, 'default' => ''),
+      'contact_pref' => array('type' => 'varchar', 'length' => 16, 'not null' => TRUE, 'default' => ''),
+      'utm_source' => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'utm_medium' => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'utm_campaign' => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'crm_status' => array('type' => 'varchar', 'length' => 16, 'not null' => TRUE, 'default' => 'queued', 'description' => 'queued, synced, retrying or failed.'),
+      'crm_id' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+      'crm_attempts' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'crm_error' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'created' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+    ),
+    'primary key' => array('cid'),
+    'indexes' => array(
+      'campaign' => array('campaign'),
+      'crm_status' => array('crm_status'),
+    ),
+  );
+
+  $schema['demo_campaign_school'] = array(
+    'description' => 'School of Workers sign-ups awaiting or past business manager approval.',
+    'fields' => array(
+      'sid' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'name' => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'email' => array('type' => 'varchar', 'length' => 254, 'not null' => TRUE, 'default' => ''),
+      'lodge' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+      'course' => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'reason' => array('type' => 'text', 'not null' => FALSE),
+      'status' => array('type' => 'varchar', 'length' => 16, 'not null' => TRUE, 'default' => 'pending', 'description' => 'pending, approved or declined.'),
+      'token_hash' => array('type' => 'varchar', 'length' => 64, 'not null' => FALSE, 'description' => 'SHA-256 of the review token. Cleared once used.'),
+      'expires' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'created' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'decided' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+    ),
+    'primary key' => array('sid'),
+    'indexes' => array('status' => array('status')),
+  );
+
+  $schema['demo_campaign_outbox'] = array(
+    'description' => 'Every email the module sends, captured instead of delivered (demo only).',
+    'fields' => array(
+      'oid' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'mail_key' => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'recipient' => array('type' => 'varchar', 'length' => 254, 'not null' => TRUE, 'default' => ''),
+      'subject' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'body' => array('type' => 'text', 'not null' => FALSE),
+      'created' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+    ),
+    'primary key' => array('oid'),
+  );
+
+  $schema['demo_campaign_stub_log'] = array(
+    'description' => 'Requests received by the CRM stub endpoint.',
+    'fields' => array(
+      'lid' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'response_code' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'payload' => array('type' => 'text', 'not null' => FALSE),
+      'created' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+    ),
+    'primary key' => array('lid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function demo_campaign_install() {
+  // Route all site mail to the demo outbox instead of a mail server.
+  config_set('system.mail', 'default-system', 'DemoCampaignOutboxMail');
+  config_set('system.core', 'site_frontpage', 'demo');
+
+  // Use the Riverbend theme and its full-width layout for public pages.
+  theme_enable(array('riverbend'));
+  config_set('system.core', 'theme_default', 'riverbend');
+  config_set('layout.layout.default', 'layout_template', 'riverbend');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function demo_campaign_uninstall() {
+  config_set('system.mail', 'default-system', 'DefaultMailSystem');
+  config_set('system.core', 'site_frontpage', 'home');
+}

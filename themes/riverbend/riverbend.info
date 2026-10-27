@@ -1,0 +1,8 @@
+type = theme
+name = Riverbend
+description = Lodge 412 theme: dark steel and safety amber, condensed headings.
+version = 1.x-0.2.0
+backdrop = 1.x
+
+stylesheets[all][] = css/riverbend.css
+scripts[] = js/riverbend.js

@@ -1,0 +1,34 @@
+services:
+  web:
+    build: .
+    environment:
+      DB_HOST: db
+      DB_NAME: backdrop
+      DB_USER: backdrop
+      DB_PASS: ${DB_PASS:?set DB_PASS in .env}
+      HASH_SALT: ${HASH_SALT:?set HASH_SALT in .env}
+      ADMIN_PASS: ${ADMIN_PASS:?set ADMIN_PASS in .env}
+      SITE_HOST: ${SITE_HOST:-localhost}
+      SITE_NAME: Riverbend Lodge 412
+    ports:
+      - "${WEB_PORT:-8088}:80"
+    volumes:
+      - files:/var/www/html/files
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: mariadb:11.4
+    environment:
+      MARIADB_DATABASE: backdrop
+      MARIADB_USER: backdrop
+      MARIADB_PASSWORD: ${DB_PASS:?set DB_PASS in .env}
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    volumes:
+      - db:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  files:
+  db:

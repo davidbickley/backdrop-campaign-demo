@@ -1,0 +1,8 @@
+type = layout
+name = Riverbend
+description = Full-width layout for Riverbend Lodge 412: the theme's header and footer, with one content region whose sections run edge to edge.
+version = 1.x-0.2.0
+backdrop = 1.x
+
+regions[content] = Content
+default region = content

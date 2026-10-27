@@ -1,0 +1,7 @@
+name = Demo Campaign
+description = Organizing campaign pages with authorization cards (pushed to a CRM, with retries) and a School of Workers approval workflow.
+type = module
+backdrop = 1.x
+package = Demo
+configure = admin/demo-campaign/settings
+version = 1.x-0.1.0

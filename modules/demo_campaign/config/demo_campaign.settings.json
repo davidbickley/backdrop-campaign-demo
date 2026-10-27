@@ -1,0 +1,53 @@
+{
+    "_config_name": "demo_campaign.settings",
+    "crm_endpoint": "http://127.0.0.1/crm-stub/services/data/v62.0/sobjects/Lead",
+    "crm_token": "demo-stub-token",
+    "crm_simulate_outage": false,
+    "crm_max_attempts": 5,
+    "review_link_days": 7,
+    "campaigns": {
+        "harbor-fab": {
+            "title": "Harbor Fabrication",
+            "eyebrow": "Harbor Fabrication · Riverbend",
+            "headline": "A schedule you can plan your life around.",
+            "lede": "Welders, fitters and machine operators at Harbor Fabrication are organizing with Lodge 412. Signing a card is confidential, it's protected by federal law, and it's how a union vote starts.",
+            "hero_image": "hero.jpg",
+            "unit_size": 310,
+            "signed_offline": 141,
+            "goal_percent": 65,
+            "issues_intro": "We've talked with more than a hundred people at Harbor Fabrication. The same three things come up in almost every conversation.",
+            "issues": [
+                {
+                    "title": "Overtime rules that change every week",
+                    "body": "A new policy shows up on the break-room board most Thursdays. Nobody knows what next month's rules will be."
+                },
+                {
+                    "title": "Weekends announced the night before",
+                    "body": "Mandatory Saturday shifts posted Friday at 9 p.m. make childcare, second jobs and family plans impossible."
+                },
+                {
+                    "title": "Safety questions with no written answer",
+                    "body": "Ventilation in Bay 3 and the lockout procedure on the plasma table have been raised for a year, with no written response."
+                }
+            ],
+            "quote": "I don't need a raise this year. I need to know on Monday whether I'm working Saturday.",
+            "quote_cite": "Fitter, second shift, nine years at Harbor (name withheld)",
+            "organizer_email": "organizer.harbor@example.org"
+        }
+    },
+    "lodges": {
+        "L412": {
+            "name": "Riverbend Lodge 412",
+            "manager_email": "business.manager@lodge412.example.org"
+        },
+        "L388": {
+            "name": "Millport Lodge 388",
+            "manager_email": "business.manager@lodge388.example.org"
+        }
+    },
+    "courses": {
+        "steward": "Steward training",
+        "safety": "Safety committee basics",
+        "officer": "New officer orientation"
+    }
+}

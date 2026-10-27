@@ -1,0 +1,17 @@
+.demo-campaign-headline {
+  font-size: 1.4em;
+  font-weight: bold;
+}
+
+.demo-campaign-card {
+  max-width: 32em;
+  padding: 1em 1.5em;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* Honeypot: off-screen rather than display:none, which some bots skip. */
+.demo-campaign-card .form-item-website {
+  position: absolute;
+  left: -9999px;
+}

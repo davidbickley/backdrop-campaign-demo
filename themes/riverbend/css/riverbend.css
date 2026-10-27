@@ -1,0 +1,262 @@
+/* Riverbend Lodge 412: dark steel, safety amber, condensed headings. */
+:root {
+  --steel: #13202a;
+  --steel-2: #1d2f3c;
+  --steel-3: #2b4253;
+  --steel-ink: #0b141b;
+  --amber: #f2a516;
+  --amber-hover: #ffb829;
+  --amber-ink: #3a2700;
+  --amber-text: #a86f00;
+  --paper: #f4f1ea;
+  --paper-2: #ebe6db;
+  --ink: #161a1e;
+  --muted: #5b6168;
+  --rule: #d8d1c3;
+  --white: #ffffff;
+  --radius: 6px;
+  --wrap: 72rem;
+  --wide: 112.5rem; /* 1800px: nav, hero and footer run wider than the content */
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --section: clamp(3.5rem, 8vw, 6rem);
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --body: "Barlow", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 1.125rem; line-height: 1.6; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+h1, h2, h3, h4 { font-family: var(--display); line-height: 1.02; margin: 0; letter-spacing: .01em; }
+h2 { font-size: clamp(2.2rem, 5vw, 3.4rem); text-transform: uppercase; font-weight: 800; }
+h3 { font-size: 1.6rem; font-weight: 700; text-transform: uppercase; }
+
+.rb-wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); }
+.rb-util .rb-wrap, .rb-head .rb-wrap, .rb-closing .rb-wrap, .rb-foot .rb-wrap { max-width: var(--wide); }
+.rb-narrow { max-width: 46rem; }
+.rb-eyebrow { display: inline-block; font-family: var(--display); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: .95rem; color: var(--amber); }
+.rb-eyebrow--dark { color: var(--amber-text); }
+.rb-muted { color: var(--muted); font-size: .95rem; }
+.rb-big { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.05; margin: 0 0 1rem; }
+
+/* Buttons */
+.rb-btn, input.rb-btn { display: inline-flex; align-items: center; justify-content: center; font-family: var(--display); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 1.15rem; line-height: 1.2; padding: .85rem 1.6rem; border-radius: var(--radius); text-decoration: none; border: 2px solid transparent; cursor: pointer; transition: background-color .15s, border-color .15s, color .15s; }
+.rb-btn-amber { background: var(--amber); color: var(--amber-ink); }
+.rb-btn-amber:hover { background: var(--amber-hover); }
+.rb-btn-ghost { border-color: rgba(255,255,255,.45); color: var(--white); }
+.rb-btn-ghost:hover { border-color: var(--white); }
+.rb-btn-dark { background: var(--steel); color: var(--white); }
+.rb-btn-dark:hover { background: var(--steel-2); }
+.rb-btn-outline { background: transparent; border-color: var(--steel); color: var(--steel); }
+.rb-btn-outline:hover { background: var(--steel); color: var(--white); }
+.rb-btn-lg { font-size: 1.3rem; padding: 1rem 2rem; }
+.rb-btn:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
+
+/* Header */
+.rb-util { background: var(--steel-ink); color: rgba(255,255,255,.7); font-size: .85rem; }
+.rb-util .rb-wrap { display: flex; justify-content: space-between; gap: 1rem; padding-top: .45rem; padding-bottom: .45rem; }
+.rb-head { background: var(--steel); color: var(--white); position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--steel-3); }
+body.admin-bar .rb-head { top: 2.2rem; }
+.rb-head .rb-wrap { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding-top: .9rem; padding-bottom: .9rem; }
+.rb-brand { display: flex; align-items: center; gap: .8rem; text-decoration: none; }
+.rb-mark { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--amber); color: var(--amber-ink); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 1.15rem; }
+.rb-mark--sm { width: 34px; height: 34px; font-size: .85rem; }
+.rb-brand b { font-family: var(--display); font-size: 1.35rem; letter-spacing: .04em; text-transform: uppercase; display: block; line-height: 1; }
+.rb-brand small { color: rgba(255,255,255,.65); font-size: .82rem; }
+.rb-nav { display: flex; align-items: center; gap: 1.6rem; font-family: var(--display); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: 1.02rem; }
+.rb-nav a { text-decoration: none; color: rgba(255,255,255,.85); }
+.rb-nav a:hover { color: var(--white); }
+.rb-nav .rb-btn { color: var(--amber-ink); padding: .55rem 1.1rem; font-size: 1rem; }
+
+/* Page title band, messages, tabs */
+.rb-pagehead { background: var(--steel); color: var(--white); padding: 2.6rem 0 2.2rem; }
+.rb-pagehead h1 { font-size: clamp(2.4rem, 5vw, 3.6rem); text-transform: uppercase; font-weight: 800; }
+.rb-messages { padding-top: 1.2rem; }
+.rb-messages .messages { border-radius: var(--radius); }
+.rb .tabs { padding-top: 1rem; }
+
+/* Hero */
+.rb-hero { background: var(--steel); color: var(--white); overflow-x: clip; --bleed: max(0px, calc((100vw - var(--wide)) / 2)); --hero-foot: clamp(3rem, 6vw, 4.5rem); /* tally default; js/riverbend.js lines it up with the buttons */ }
+.rb-hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; min-height: max(36rem, 80vh); max-width: var(--wide); margin: 0 auto; }
+.rb-hero--short .rb-hero-grid { min-height: 26rem; }
+.rb-hero-copy { padding: clamp(3rem, 7vw, 5.5rem) var(--gutter) var(--hero-foot) var(--gutter); display: flex; flex-direction: column; justify-content: center; }
+.rb-hero h1 { font-size: clamp(3rem, 7vw, 5.4rem); font-weight: 800; text-transform: uppercase; margin: 1rem 0 1.4rem; }
+.rb-hero--short h1 { font-size: clamp(2.8rem, 6vw, 4.6rem); }
+.rb-lede { font-size: 1.25rem; color: rgba(255,255,255,.82); max-width: 34rem; margin: 0 0 2rem; }
+.rb-actions { display: flex; flex-wrap: wrap; gap: .9rem; }
+.rb-hero-art { position: relative; background: var(--steel-2); min-height: 22rem; overflow: hidden; margin-right: calc(-1 * var(--bleed)); }
+.rb-hero-art > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.rb-hero-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--steel) 0%, rgba(19,32,42,.25) 30%, rgba(19,32,42,0) 60%); pointer-events: none; }
+
+/* Tally */
+.rb-tally { background: rgba(11,20,27,.88); color: var(--white); border: 1px solid var(--steel-3); border-radius: var(--radius); padding: 1.2rem 1.4rem; backdrop-filter: blur(6px); }
+.rb-hero-art .rb-tally { position: absolute; left: 2rem; right: calc(2rem + var(--bleed)); bottom: var(--hero-foot); z-index: 2; }
+.rb-tally-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.rb-tally-num { font-family: var(--display); font-weight: 800; font-size: 2.6rem; line-height: 1; }
+.rb-tally-num span { color: rgba(255,255,255,.55); font-size: 1.3rem; font-weight: 600; }
+.rb-tally-label { font-size: .9rem; color: rgba(255,255,255,.7); text-align: right; }
+.rb-bar { position: relative; height: 12px; background: var(--steel-3); border-radius: 99px; margin: 1rem 0 .55rem; }
+.rb-bar i { position: absolute; inset: 0 auto 0 0; background: var(--amber); border-radius: 99px; }
+.rb-bar em { position: absolute; top: -5px; bottom: -5px; width: 2px; background: var(--white); }
+.rb-bar-legend { display: flex; justify-content: space-between; gap: .5rem; font-size: .82rem; color: rgba(255,255,255,.65); }
+
+/* Sections */
+.rb-sec { padding: var(--section) 0; }
+.rb-section-head { max-width: 46rem; margin-bottom: 2.6rem; }
+.rb-section-head h2 { margin-top: .5rem; }
+.rb-section-head p { color: var(--muted); font-size: 1.2rem; margin: 1rem 0 0; }
+
+.rb-issues { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+.rb-issue { background: var(--white); border: 1px solid var(--rule); border-radius: var(--radius); padding: 1.8rem; }
+.rb-num { font-family: var(--display); font-weight: 800; font-size: 3.4rem; line-height: 1; color: var(--amber); }
+.rb-issue h3 { margin: .8rem 0 .6rem; }
+.rb-issue p { margin: 0; color: var(--muted); }
+
+.rb-quote { position: relative; margin: 2.5rem 0 0; border-radius: var(--radius); overflow: hidden; min-height: 20rem; display: flex; align-items: flex-end; background: var(--steel); }
+.rb-quote img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.rb-quote::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,20,27,.92) 0%, rgba(11,20,27,.35) 65%, rgba(11,20,27,.1) 100%); }
+.rb-quote blockquote { position: relative; z-index: 1; margin: 0; padding: 2.4rem clamp(1.4rem, 4vw, 3rem); color: var(--white); max-width: 50rem; }
+.rb-quote p { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(1.7rem, 3.6vw, 2.6rem); line-height: 1.12; text-transform: uppercase; }
+.rb-quote p::before { content: "“"; color: var(--amber); margin-right: .1em; }
+.rb-quote cite { display: block; margin-top: .9rem; font-style: normal; color: rgba(255,255,255,.75); font-size: 1rem; }
+
+.rb-dark { position: relative; background: var(--steel); color: var(--white); overflow: hidden; }
+.rb-dark::before { content: ""; position: absolute; inset: 0; background: var(--rb-bg) center / cover no-repeat; opacity: .18; filter: grayscale(.4); }
+.rb-dark > .rb-wrap { position: relative; }
+.rb-dark .rb-section-head p { color: rgba(255,255,255,.78); }
+.rb-steps { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--steel-3); }
+.rb-step { padding: 1.8rem 1.6rem 0 0; border-right: 1px solid var(--steel-3); margin-right: 1.6rem; }
+.rb-step:last-child { border-right: 0; margin-right: 0; }
+.rb-n { font-family: var(--display); font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--amber); }
+.rb-step h3 { margin: .5rem 0 .6rem; font-size: 1.7rem; }
+.rb-step p { margin: 0; color: rgba(255,255,255,.78); font-size: 1.02rem; }
+
+.rb-rights { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+.rb-checks { list-style: none; padding: 0; margin: 0; }
+.rb-checks li { padding: 1rem 0 1rem 2.4rem; border-bottom: 1px solid var(--rule); position: relative; }
+.rb-checks li::before { content: ""; position: absolute; left: 0; top: 1.25rem; width: 1.2rem; height: 1.2rem; border-radius: 50%; background: var(--steel); box-shadow: inset 0 0 0 4px var(--amber); }
+.rb-faq details { border-bottom: 1px solid var(--rule); padding: 1.1rem 0; }
+.rb-faq summary { font-family: var(--display); font-weight: 700; font-size: 1.4rem; text-transform: uppercase; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
+.rb-faq summary::-webkit-details-marker { display: none; }
+.rb-faq summary::after { content: "+"; color: var(--amber-text); }
+.rb-faq details[open] summary::after { content: "–"; }
+.rb-faq p { margin: .7rem 0 0; color: var(--muted); }
+
+/* Lodge home tiles */
+.rb-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+.rb-tile { display: flex; flex-direction: column; background: var(--white); border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; text-decoration: none; transition: transform .15s, box-shadow .15s; }
+.rb-tile:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -28px rgba(19,32,42,.6); }
+.rb-tile img { aspect-ratio: 16 / 10; object-fit: cover; width: 100%; }
+.rb-tile > div { padding: 1.5rem 1.6rem 1.7rem; display: flex; flex-direction: column; gap: .8rem; flex: 1; }
+.rb-tile p { margin: 0; color: var(--muted); flex: 1; }
+.rb-tile .rb-btn { align-self: flex-start; font-size: 1rem; padding: .6rem 1.1rem; }
+
+/* Card forms */
+.rb-card-sec { background: var(--paper-2); }
+.rb-card-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 2.5rem; align-items: start; }
+.rb-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--rule); box-shadow: 0 20px 50px -30px rgba(19,32,42,.45); overflow: hidden; }
+.rb-card-head { background: var(--steel); color: var(--white); padding: 1.4rem 2rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.rb-card-head h3 { font-size: 1.9rem; }
+.rb-card-head span { font-size: .85rem; color: rgba(255,255,255,.7); }
+.rb-card-body { padding: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem 1.2rem; }
+.rb-card--single > div > .form-item { margin: 0 2rem 1.1rem; }
+.rb-card--single .rb-card-head + .form-item { margin-top: 2rem; }
+.rb-card .form-item { margin: 0; display: flex; flex-direction: column; gap: .35rem; }
+.rb-card .rb-full { grid-column: 1 / -1; }
+.rb-card label { font-weight: 600; font-size: .95rem; }
+.rb-card .form-required { color: #b4441c; }
+.rb-card input.form-text, .rb-card input.form-tel, .rb-card input.form-email, .rb-card select, .rb-card textarea { width: 100%; font: inherit; padding: .75rem .9rem; border: 1.5px solid #c7c0b2; border-radius: var(--radius); background: #fffdf8; color: var(--ink); }
+.rb-card input:focus, .rb-card select:focus, .rb-card textarea:focus { outline: 3px solid rgba(242,165,22,.5); border-color: #c98600; }
+.rb-card .description { font-size: .85rem; color: var(--muted); margin: 0; }
+.rb-card .error { border-color: #b4441c !important; }
+
+.rb-pills .form-radios { display: flex; gap: .6rem; }
+.rb-pills .form-type-radio { flex: 1; position: relative; margin: 0; }
+.rb-pills .form-type-radio input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.rb-pills .form-type-radio label { display: block; border: 1.5px solid #c7c0b2; border-radius: var(--radius); padding: .65rem; text-align: center; font-weight: 600; }
+.rb-pills .form-type-radio:has(input:checked) label { background: var(--steel); border-color: var(--steel); color: var(--white); }
+.rb-pills .form-type-radio:has(input:focus-visible) label { outline: 3px solid rgba(242,165,22,.6); }
+.rb-auth { flex-direction: row !important; gap: .8rem !important; align-items: flex-start; background: #fff7e6; border: 1.5px solid #f0d08a; border-radius: var(--radius); padding: 1rem; }
+.rb-auth input { width: 1.3rem; height: 1.3rem; margin: .15rem 0 0; accent-color: var(--steel); flex: none; }
+.rb-auth label { font-weight: 600; font-size: 1rem; }
+.rb-hp { position: absolute !important; left: -9999px; }
+.rb-card-foot { padding: 0 2rem 2rem; margin: 0; display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
+.rb-card-foot small { color: var(--muted); flex: 1; min-width: 14rem; }
+
+.rb-next h3 { font-size: 2rem; margin-bottom: .6rem; }
+.rb-next-img { border-radius: var(--radius); aspect-ratio: 16 / 10; object-fit: cover; width: 100%; margin-bottom: 1.6rem; }
+.rb-next ol { list-style: none; padding: 0; margin: 0; counter-reset: n; }
+.rb-next li { counter-increment: n; display: grid; grid-template-columns: 2.6rem 1fr; column-gap: 1rem; padding: 1.1rem 0; border-bottom: 1px solid var(--rule); }
+.rb-next li::before { content: counter(n); grid-row: span 2; width: 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--steel); color: var(--amber); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 1.3rem; }
+.rb-next li b { display: block; }
+.rb-next li span { color: var(--muted); font-size: 1rem; }
+.rb-lock { margin-top: 1.6rem; display: flex; gap: .8rem; align-items: center; font-size: .95rem; color: var(--muted); }
+
+/* Review page */
+.rb-review-body { padding: 1.6rem 2rem 2rem; }
+.rb-dl { width: 100%; border-collapse: collapse; margin-bottom: 1.6rem; }
+.rb-dl td { padding: .7rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.rb-dl td:first-child { width: 9rem; font-weight: 600; color: var(--muted); }
+.rb-review .form-actions { display: flex; gap: .8rem; margin: 0; }
+
+/* Thank-you */
+.rb-thanks { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+.rb-thanks > img { border-radius: var(--radius); aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+.rb-thanks .rb-tally { margin: 1.6rem 0; background: var(--steel); }
+
+/* Closing CTA */
+.rb-closing { position: relative; background: var(--amber); color: var(--amber-ink); padding: clamp(3.5rem, 8vw, 5.5rem) 0; overflow: hidden; }
+.rb-closing::before { content: ""; position: absolute; inset: 0 0 0 52%; background: var(--rb-bg) 55% 85% / cover no-repeat; -webkit-mask-image: linear-gradient(90deg, transparent, #000 40%); mask-image: linear-gradient(90deg, transparent, #000 40%); }
+.rb-closing .rb-wrap { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1.8rem; }
+.rb-closing .rb-wrap > div { max-width: 36rem; }
+.rb-closing h2 { font-size: clamp(2.2rem, 5vw, 3.6rem); }
+.rb-closing p { margin: .6rem 0 0; font-size: 1.2rem; }
+
+/* Footer */
+.rb-foot { background: var(--steel-ink); color: rgba(255,255,255,.65); font-size: .95rem; padding: 3rem 0 2rem; }
+.rb-foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 2rem; }
+.rb-foot-grid > div:first-child p { max-width: 30rem; }
+.rb-foot h4 { text-transform: uppercase; letter-spacing: .1em; color: var(--white); margin: 0 0 .8rem; font-size: 1.05rem; }
+.rb-foot ul { list-style: none; padding: 0; margin: 0; line-height: 2; }
+.rb-foot a { text-decoration: none; }
+.rb-foot a:hover { color: var(--white); }
+.rb-fine { border-top: 1px solid #22313c; margin-top: 2.5rem; padding-top: 1.4rem; font-size: .85rem; }
+.rb-fine p { margin: 0 0 .3rem; }
+
+/* Very wide screens: a shorter hero keeps the copy from floating in empty space. */
+@media (min-width: 2560px) {
+  .rb-hero:not(.rb-hero--short) .rb-hero-grid { min-height: max(36rem, 60vh); }
+}
+
+@media (max-width: 900px) {
+  .rb-nav a:not(.rb-btn) { display: none; }
+  .rb-hero-grid, .rb-rights, .rb-card-grid, .rb-foot-grid, .rb-thanks { grid-template-columns: 1fr; }
+  .rb-hero-grid { min-height: 0; }
+  .rb-hero-art { min-height: 24rem; margin-right: 0; }
+  .rb-hero-art::after { background: linear-gradient(180deg, var(--steel) 0%, rgba(19,32,42,0) 30%); }
+  .rb-issues, .rb-tiles { grid-template-columns: 1fr; }
+  .rb-steps { grid-template-columns: 1fr 1fr; }
+  .rb-step { border-right: 0; margin-right: 0; border-bottom: 1px solid var(--steel-3); padding-bottom: 1.6rem; }
+  .rb-closing::before { inset: 0; opacity: .18; -webkit-mask-image: none; mask-image: none; }
+}
+@media (max-width: 560px) {
+  .rb-util .rb-wrap span:last-child, .rb-brand small { display: none; }
+  .rb-head .rb-wrap { gap: .8rem; }
+  .rb-brand b { font-size: 1.15rem; }
+  .rb-mark { width: 38px; height: 38px; font-size: 1rem; }
+  .rb-nav .rb-btn { white-space: nowrap; padding: .5rem .8rem; font-size: .9rem; }
+  .rb-hero-art { min-height: 0; display: flex; flex-direction: column; background: var(--steel); }
+  .rb-hero-art > img { position: relative; height: 15rem; }
+  .rb-hero-art::after { display: none; }
+  .rb-hero-art .rb-tally { position: relative; left: auto; right: auto; bottom: auto; margin: -2.5rem 1rem 1.5rem; }
+  .rb-tally-top { flex-direction: column; align-items: flex-start; gap: .3rem; }
+  .rb-tally-num { white-space: nowrap; }
+  .rb-tally-label { text-align: left; }
+  .rb-tally-label br { display: none; }
+  .rb-steps { grid-template-columns: 1fr; }
+  .rb-card-body { grid-template-columns: 1fr; padding: 1.4rem; }
+  .rb-card-head, .rb-card-foot, .rb-review-body { padding-left: 1.4rem; padding-right: 1.4rem; }
+  .rb-card--single > div > .form-item { margin-left: 1.4rem; margin-right: 1.4rem; }
+  .rb-bar-legend span:nth-child(3) { display: none; }
+}
